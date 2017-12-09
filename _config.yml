@@ -1,1 +1,9 @@
 theme: jekyll-theme-cayman
+
+exclude: [ "Gemfile.lock", "Gemfile", "README.md", ".gitignore" ]
+include: [ "_pages" ]
+
+title: ProtoDef
+description: Describe your protocol, and read it with ease
+
+production_url: http://protodef.io

@@ -1,37 +1,47 @@
-## Welcome to GitHub Pages
+---
+title: ProtoDef
+permalink: /
+---
 
-You can use the [editor on GitHub](https://github.com/ProtoDef-io/ProtoDef-io.github.io/edit/master/index.md) to maintain and preview the content for your website in Markdown files.
+ProtoDef is simply a specification for defining your binary formats: from game protocols, to the MPEG3 format, you can define it all in one concise, portable language standard. This is much like Protocol Buffers, however, ProtoDef is far more extensible. With Protocol Buffers you're limited to certain types and specific use-cases. With ProtoDef, we let you do whatever you like, however you like; if that's not enough for you: no worries, just fill the gap using your preferred language. Tell me more, you say? No, let me show you.
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
+Given your protocol:
 
-### Markdown
+```ruby
+@type integer("i32")
+def_native("i32");
 
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
-
-```markdown
-Syntax highlighted code block
-
-# Header 1
-## Header 2
-### Header 3
-
-- Bulleted
-- List
-
-1. Numbered
-2. List
-
-**Bold** and _Italic_ and `Code` text
-
-[Link](url) and ![Image](src)
+def("position") => container {
+    field("x") => ::i32;
+    field("y") => ::i32;
+    field("z") => ::i32;
+};
 ```
 
-For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
+Compile it using `protodefc --language javascript --input protocol.pds --output output.js`
 
-### Jekyll Themes
+Then import it into your language (in this case, JavaScript):
+```javascript
+var output = require('./output.js');
 
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/ProtoDef-io/ProtoDef-io.github.io/settings). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
+var { size_of, serialize, deserialize } = output['::position'];
 
-### Support or Contact
+var offset = 0;
+var input = { x: 1, y: 2, z: 3 };
+var output = new Buffer(size_of(input));
 
-Having trouble with Pages? Check out our [documentation](https://help.github.com/categories/github-pages-basics/) or [contact support](https://github.com/contact) and we’ll help you sort it out.
+serialize(input, output, offset);
+
+console.log(output);
+
+// => <Buffer 00 00 00 01 00 00 00 02 00 00 00 03>
+```
+
+## Use cases
+
+You can use it for anything you want, but here are some cool usages:
+
+- Game protocols (such as Minecraft, Terraria, etc.)
+- File formats (MPEG3, PDF, Minecraft Map format, etc.)
+- Keeping things concise over the wire with no rewriting: using Rust on the server-side, then using the same protocol specification in JavaScript, no porting required!
+- Legacy protocols that are implemented in different languages across your clients and servers
