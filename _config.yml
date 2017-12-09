@@ -1,6 +1,6 @@
 theme: jekyll-theme-cayman
 
-exclude: [ "Gemfile.lock", "Gemfile", "README.md", ".gitignore" ]
+exclude: [ "Gemfile.lock", "Gemfile", "README.md", ".gitignore", ".gitattributes" ]
 include: [ "_pages" ]
 
 title: ProtoDef
